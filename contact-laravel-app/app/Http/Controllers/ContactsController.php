@@ -8,26 +8,17 @@ use Illuminate\Support\Facades\Auth;
 
 class ContactsController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
         $contacts = Contacts::where('user_id', Auth::id())->get();
         return view('contacts.index', compact('contacts'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
         return view('contacts.create');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
         $request->validate([
@@ -43,24 +34,9 @@ class ContactsController extends Controller
             'phone' => $request->phone
         ]);
 
-        return redirect()->route('contacts.index')->with('success', 'Contact added successfully.');
+        return view('contacts.index', ['contacts' => Contacts::where('user_id', Auth::id())->get()]);
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Contacts $contact)
-    {
-        if ($contact->user_id !== Auth::id()) {
-            abort(403, 'Unauthorized action.');
-        }
-
-        return view('contacts.show', compact('contact'));
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
     public function edit(Contacts $contact)
     {
         if ($contact->user_id !== Auth::id()) {
@@ -70,9 +46,6 @@ class ContactsController extends Controller
         return view('contacts.edit', compact('contact'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(Request $request, Contacts $contact)
     {
         if ($contact->user_id !== Auth::id()) {
@@ -85,14 +58,16 @@ class ContactsController extends Controller
             'phone' => 'required|string|max:20'
         ]);
 
-        $contact->update($request->only('name', 'email', 'phone'));
+        $contact->update([
+            'name' => $request->name,
+            'email' => $request->email,
+            'phone' => $request->phone
+        ]);
 
-        return redirect()->route('contacts.index')->with('success', 'Contact updated successfully.');
+        // Return updated contacts list via HTMX
+        return view('contacts.index', ['contacts' => Contacts::where('user_id', Auth::id())->get()]);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(Contacts $contact)
     {
         if ($contact->user_id !== Auth::id()) {
@@ -100,6 +75,6 @@ class ContactsController extends Controller
         }
 
         $contact->delete();
-        return redirect()->route('contacts.index')->with('success', 'Contact deleted successfully.');
+        return response(''); // Empty response with no content
     }
 }

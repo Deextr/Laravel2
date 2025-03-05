@@ -11,6 +11,9 @@
         <link rel="preconnect" href="https://fonts.bunny.net">
         <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
 
+        <!-- HTMX -->
+        <script src="https://unpkg.com/htmx.org@1.9.5"></script>
+
         <!-- Scripts -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
@@ -28,7 +31,7 @@
             @endisset
 
             <!-- Page Content -->
-            <main>
+            <main id="content">
                 @yield('content')
             </main>
         </div>

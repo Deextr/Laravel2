@@ -4,7 +4,12 @@
     <div class="max-w-4xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
         <div class="bg-white shadow-md rounded-lg p-6">
             <h1 class="text-2xl font-bold text-gray-800 mb-6">Add Contact</h1>
-            <form method="POST" action="{{ route('contacts.store') }}" class="space-y-6">
+            <form method="POST" action="{{ route('contacts.store') }}" 
+                  hx-post="{{ route('contacts.store') }}" 
+                  hx-target="#content" 
+                  hx-swap="innerHTML"
+                  hx-push-url="true" 
+                  class="space-y-6">
                 @csrf
                 <div>
                     <label for="name" class="block text-sm font-medium text-gray-700">Name</label>
@@ -27,6 +32,9 @@
                         Save
                     </button>
                     <a href="{{ route('contacts.index') }}" 
+                       hx-get="{{ route('contacts.index') }}" 
+                       hx-target="#content" 
+                       hx-push-url="true"
                        class="inline-flex items-center px-6 py-2 bg-gray-500 text-white font-semibold rounded-md hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-500">
                         Cancel
                     </a>
